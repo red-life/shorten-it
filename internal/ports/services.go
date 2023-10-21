@@ -2,7 +2,11 @@ package ports
 
 import "context"
 
-type Shortener interface {
+type ShortenerService interface {
 	Shorten(ctx context.Context, url string) (string, error)
 	GetLongURL(ctx context.Context, key string) (string, error)
+}
+
+type KeyGenService interface {
+	GenerateKey() (string, error)
 }
