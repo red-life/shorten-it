@@ -10,3 +10,8 @@ type URLRepository interface {
 	GetLongByKey(ctx context.Context, key string) (string, error)
 	GetKeyByLong(ctx context.Context, longURL string) (string, error)
 }
+
+type CounterRepository interface {
+	GetCounter() (int, error)
+	Increase(i int) error
+}
