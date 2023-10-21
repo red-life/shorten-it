@@ -2,11 +2,12 @@ package services
 
 import "github.com/red-life/shorten-it/internal/ports"
 
-func NewKeyGenService() ports.KeyGenService {
+func NewKeyGenService(counter ports.CounterRepository) ports.KeyGenService {
 	return &KeyGen{}
 }
 
 type KeyGen struct {
+	counter ports.CounterRepository
 }
 
 func (k KeyGen) GenerateKey() (string, error) {
