@@ -5,7 +5,7 @@ import (
 	"github.com/red-life/shorten-it/internal/ports"
 )
 
-func NewShortener() ports.Shortener {
+func NewShortenerService() ports.ShortenerService {
 	return &Shortener{}
 }
 
@@ -21,6 +21,3 @@ func (s Shortener) GetLongURL(ctx context.Context, key string) (string, error) {
 	//TODO implement me
 	panic("implement me")
 }
-
-
-
