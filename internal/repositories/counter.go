@@ -25,15 +25,16 @@ type Counter struct {
 func (c *Counter) GetCounter(ctx context.Context) (int, error) {
 	key := fmt.Sprintf("%s:counter", CounterPrefix)
 	val, err := c.rdb.Get(ctx, key).Result()
-	if err != nil {
-		err = customerror.MapRedisToCustomError(err)
-		if errors.Is(err, customerror.ErrNotFound) {
-			return 0, nil
-		}
-		return 0, err
+	if err == nil {
+		counter, _ := strconv.Atoi(val)
+		return counter, nil
 	}
-	counter, _ := strconv.Atoi(val)
-	return counter, nil
+	err = customerror.MapRedisToCustomError(err)
+	if errors.Is(err, customerror.ErrNotFound) {
+		return 0, nil
+	}
+	return 0, err
+
 }
 
 func (c *Counter) Increase(ctx context.Context) error {
