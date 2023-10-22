@@ -4,13 +4,17 @@ import (
 	"context"
 	"github.com/red-life/shorten-it/internal/models"
 	"github.com/red-life/shorten-it/internal/ports"
+	"gorm.io/gorm"
 )
 
-func NewURLRepository() ports.URLRepository {
-	return &URL{}
+func NewURLRepository(db *gorm.DB) ports.URLRepository {
+	return &URL{
+		db: db,
+	}
 }
 
 type URL struct {
+	db *gorm.DB
 }
 
 func (U URL) Save(ctx context.Context, url models.URL) error {
