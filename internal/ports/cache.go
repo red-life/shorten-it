@@ -1,7 +1,9 @@
 package ports
 
+import "context"
+
 type Cache interface {
-	Set(key string, value string) error
-	Get(key string) (string, error)
-	Delete(key string) error
+	Set(ctx context.Context, key string, value string) error
+	Get(ctx context.Context, key string) (string, error)
+	Delete(ctx context.Context, key string) error
 }
