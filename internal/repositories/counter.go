@@ -22,11 +22,11 @@ type Counter struct {
 	rdb *redis.Client
 }
 
-func (c *Counter) GetCounter(ctx context.Context) (int, error) {
+func (c *Counter) GetCounter(ctx context.Context) (int64, error) {
 	key := fmt.Sprintf("%s:counter", CounterPrefix)
 	val, err := c.rdb.Get(ctx, key).Result()
 	if err == nil {
-		counter, _ := strconv.Atoi(val)
+		counter, _ := strconv.ParseInt(val, 10, 64)
 		return counter, nil
 	}
 	err = customerror.MapRedisToCustomError(err)
@@ -34,11 +34,10 @@ func (c *Counter) GetCounter(ctx context.Context) (int, error) {
 		return 0, nil
 	}
 	return 0, err
-
 }
 
-func (c *Counter) Increase(ctx context.Context) error {
+func (c *Counter) Increase(ctx context.Context) (int64, error) {
 	key := fmt.Sprintf("%s:counter", CounterPrefix)
-	_, err := c.rdb.Incr(ctx, key).Result()
-	return customerror.MapRedisToCustomError(err)
+	counter, err := c.rdb.Incr(ctx, key).Result()
+	return counter, customerror.MapRedisToCustomError(err)
 }

@@ -12,6 +12,6 @@ type URLRepository interface {
 }
 
 type CounterRepository interface {
-	GetCounter(ctx context.Context) (int, error)
-	Increase(ctx context.Context) error
+	GetCounter(ctx context.Context) (int64, error)
+	Increase(ctx context.Context) (int64, error)
 }
