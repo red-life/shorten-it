@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/red-life/shorten-it/internal/pkg/customerror"
 	"github.com/red-life/shorten-it/internal/ports"
 	"github.com/redis/go-redis/v9"
 	"strconv"
@@ -25,7 +26,8 @@ func (c *Counter) GetCounter(ctx context.Context) (int, error) {
 	key := fmt.Sprintf("%s:counter", CounterPrefix)
 	val, err := c.rdb.Get(ctx, key).Result()
 	if err != nil {
-		if errors.Is(err, redis.Nil) {
+		err = customerror.MapRedisToCustomError(err)
+		if errors.Is(err, customerror.ErrNotFound) {
 			return 0, nil
 		}
 		return 0, err
@@ -37,5 +39,5 @@ func (c *Counter) GetCounter(ctx context.Context) (int, error) {
 func (c *Counter) Increase(ctx context.Context) error {
 	key := fmt.Sprintf("%s:counter", CounterPrefix)
 	_, err := c.rdb.Incr(ctx, key).Result()
-	return err
+	return customerror.MapRedisToCustomError(err)
 }
