@@ -1,6 +1,6 @@
 package models
 
 type URL struct {
-	Key  string
-	Long string
+	Key  string `gorm:"uniqueIndex"`
+	Long string `gorm:"uniqueIndex"`
 }
