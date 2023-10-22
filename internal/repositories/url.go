@@ -17,17 +17,24 @@ type URL struct {
 	db *gorm.DB
 }
 
-func (U URL) Save(ctx context.Context, url models.URL) error {
-	//TODO implement me
-	panic("implement me")
+func (U *URL) Save(ctx context.Context, url models.URL) error {
+	result := U.db.WithContext(ctx).Create(url)
+	return result.Error
 }
 
-func (U URL) GetLongByKey(ctx context.Context, key string) (string, error) {
-	//TODO implement me
-	panic("implement me")
+func (U *URL) GetLongByKey(ctx context.Context, key string) (string, error) {
+	url, err := U.get(ctx, models.URL{Key: key})
+	return url.Long, err
+
 }
 
-func (U URL) GetKeyByLong(ctx context.Context, longURL string) (string, error) {
-	//TODO implement me
-	panic("implement me")
+func (U *URL) GetKeyByLong(ctx context.Context, longURL string) (string, error) {
+	url, err := U.get(ctx, models.URL{Long: longURL})
+	return url.Key, err
+}
+
+func (U *URL) get(ctx context.Context, condition models.URL) (models.URL, error) {
+	url := new(models.URL)
+	result := U.db.WithContext(ctx).Where(condition).First(url)
+	return *url, result.Error
 }
