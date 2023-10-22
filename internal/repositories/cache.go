@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"github.com/red-life/shorten-it/internal/pkg/customerror"
 	"github.com/red-life/shorten-it/internal/ports"
 	"github.com/redis/go-redis/v9"
 	"time"
@@ -20,7 +21,8 @@ type Cache struct {
 }
 
 func (c *Cache) Set(ctx context.Context, key string, value string) error {
-	return c.rdb.Set(ctx, key, value, DefaultTTL).Err()
+	err := c.rdb.Set(ctx, key, value, DefaultTTL).Err()
+	return customerror.MapRedisToCustomError(err)
 }
 
 func (c *Cache) Get(ctx context.Context, key string) (string, error) {
@@ -29,7 +31,7 @@ func (c *Cache) Get(ctx context.Context, key string) (string, error) {
 	pipe.ExpireXX(ctx, key, DefaultTTL)
 	cmds, err := pipe.Exec(ctx)
 	if err != nil {
-		return "", err
+		return "", customerror.MapRedisToCustomError(err)
 	}
 	return cmds[0].(*redis.StringCmd).Val(), nil
 }

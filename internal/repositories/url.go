@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 	"github.com/red-life/shorten-it/internal/models"
+	"github.com/red-life/shorten-it/internal/pkg/customerror"
 	"github.com/red-life/shorten-it/internal/ports"
 	"gorm.io/gorm"
 )
@@ -19,7 +20,7 @@ type URL struct {
 
 func (U *URL) Save(ctx context.Context, url models.URL) error {
 	result := U.db.WithContext(ctx).Create(url)
-	return result.Error
+	return customerror.MapGormToCustomError(result.Error)
 }
 
 func (U *URL) GetLongByKey(ctx context.Context, key string) (string, error) {
@@ -36,5 +37,5 @@ func (U *URL) GetKeyByLong(ctx context.Context, longURL string) (string, error) 
 func (U *URL) get(ctx context.Context, condition models.URL) (models.URL, error) {
 	url := new(models.URL)
 	result := U.db.WithContext(ctx).Where(condition).First(url)
-	return *url, result.Error
+	return *url, customerror.MapGormToCustomError(result.Error)
 }
