@@ -1,0 +1,10 @@
+with-expecter: True
+dir: "{{.InterfaceDir}}/mocks"
+filename: "{{.InterfaceName}}.go"
+mockname: "{{.InterfaceName}}"
+
+packages:
+  github.com/red-life/shorten-it/internal/ports:
+    interfaces:
+      URLRepository:
+      KeyGenService:
