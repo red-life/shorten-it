@@ -8,5 +8,5 @@ type ShortenerService interface {
 }
 
 type KeyGenService interface {
-	GenerateKey() (string, error)
+	GenerateKey(ctx context.Context) (string, error)
 }
