@@ -8,6 +8,13 @@ import (
 	"net/http"
 )
 
+func NewShortenerAdapter(shortenerService ports.ShortenerService, validate *validator.Validate) *Shortener {
+	return &Shortener{
+		shortenerService: shortenerService,
+		validate:         validate,
+	}
+}
+
 type Shortener struct {
 	shortenerService ports.ShortenerService
 	validate         *validator.Validate
