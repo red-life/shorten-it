@@ -8,3 +8,4 @@ packages:
     interfaces:
       URLRepository:
       KeyGenService:
+      ShortenerService:
