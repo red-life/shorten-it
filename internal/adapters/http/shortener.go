@@ -8,6 +8,11 @@ import (
 	"net/http"
 )
 
+func RegisterShortenerRoutes(shortener *Shortener, engine *gin.Engine) {
+	engine.POST("/shorten", shortener.Shorten)
+	engine.POST("/:key", shortener.Redirect)
+}
+
 func NewShortenerAdapter(shortenerService ports.ShortenerService, validate *validator.Validate) *Shortener {
 	return &Shortener{
 		shortenerService: shortenerService,
