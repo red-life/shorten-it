@@ -15,13 +15,11 @@ import (
 	"os"
 )
 
-func newRedisClient(db int) *redis.Client {
-	addr, user, pass := os.Getenv("REDIS_ADDR"), os.Getenv("REDIS_USERNAME"), os.Getenv("REDIS_PASSWORD")
+func newRedisClient(host, port, pass string) *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr:     addr,
-		Username: user,
+		Addr:     fmt.Sprintf("%s:%s", host, port),
 		Password: pass,
-		DB:       db,
+		DB:       0,
 	})
 }
 
@@ -43,8 +41,8 @@ func main() {
 		panic(err)
 	}
 	serverAddr := fmt.Sprintf("%s:%s", os.Getenv("SERVER_HOST"), os.Getenv("SERVER_PORT"))
-	cacheRDB := newRedisClient(0)
-	counterRDB := newRedisClient(1)
+	cacheRDB := newRedisClient(os.Getenv("REDIS_CACHE_HOST"), os.Getenv("REDIS_CACHE_PORT"), os.Getenv("REDIS_CACHE_PASSWORD"))
+	counterRDB := newRedisClient(os.Getenv("REDIS_COUNTER_HOST"), os.Getenv("REDIS_COUNTER_PORT"), os.Getenv("REDIS_COUNTER_PASSWORD"))
 	db := newGormDB()
 	if err != nil {
 		panic(err)
