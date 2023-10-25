@@ -8,7 +8,7 @@ import (
 	"github.com/red-life/shorten-it/internal/adapters/http"
 	"github.com/red-life/shorten-it/internal/repositories"
 	"github.com/red-life/shorten-it/internal/services"
-	base622 "github.com/red-life/shorten-it/pkg/base62"
+	"github.com/red-life/shorten-it/pkg/base62"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -51,7 +51,7 @@ func main() {
 	urlRepo := repositories.NewURLRepository(db)
 	counterRepo := repositories.NewCounterRepository(counterRDB)
 	urlRepoWithCache := repositories.NewURLWithCacheRepository(cacheRepo, urlRepo)
-	converter := base622.NewConverter()
+	converter := base62.NewConverter()
 	kgs := services.NewKeyGenService(counterRepo, converter)
 	shortenerService := services.NewShortenerService(urlRepoWithCache, kgs)
 	validate := validator.New()
