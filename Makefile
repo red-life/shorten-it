@@ -3,3 +3,10 @@ generate_mocks:
 
 run_tests:
 	go test ./...
+
+build:
+	docker-compose build
+
+run:
+	make build
+	docker-compose up -d
