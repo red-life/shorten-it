@@ -6,6 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/red-life/shorten-it/internal/adapters/http"
+	"github.com/red-life/shorten-it/internal/models"
 	"github.com/red-life/shorten-it/internal/repositories"
 	"github.com/red-life/shorten-it/internal/services"
 	"github.com/red-life/shorten-it/pkg/base62"
@@ -44,6 +45,7 @@ func main() {
 	cacheRDB := newRedisClient(os.Getenv("REDIS_CACHE_HOST"), os.Getenv("REDIS_CACHE_PORT"), os.Getenv("REDIS_CACHE_PASSWORD"))
 	counterRDB := newRedisClient(os.Getenv("REDIS_COUNTER_HOST"), os.Getenv("REDIS_COUNTER_PORT"), os.Getenv("REDIS_COUNTER_PASSWORD"))
 	db := newGormDB()
+	err = db.AutoMigrate(&models.URL{})
 	if err != nil {
 		panic(err)
 	}
