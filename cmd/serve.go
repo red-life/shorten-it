@@ -27,7 +27,7 @@ func newGormDB() *gorm.DB {
 	host, port, user, pass, dbName := os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_PORT"),
 		os.Getenv("POSTGRES_USERNAME"), os.Getenv("POSTGRES_PASSWORD"),
 		os.Getenv("POSTGRES_DB")
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", host, port, user, pass, dbName)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", host, user, pass, dbName, port)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
