@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -17,11 +18,16 @@ import (
 )
 
 func newRedisClient(host, pass string) *redis.Client {
-	return redis.NewClient(&redis.Options{
+	client := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:6379", host),
 		Password: pass,
 		DB:       0,
 	})
+	ping := client.Ping(context.Background())
+	if _, err := ping.Result(); err != nil {
+		panic(err)
+	}
+	return client
 }
 
 func newGormDB() *gorm.DB {
