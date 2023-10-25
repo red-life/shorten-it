@@ -30,6 +30,8 @@ services:
       - "redis-server"
       - "--requirepass"
       - "${REDIS_CACHE_PASSWORD}"
+      - "--save"
+      - "\"1 1\""
 
   redis_counter:
     image: redis
