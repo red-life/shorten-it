@@ -42,7 +42,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	serverAddr := os.Getenv("SERVER_ADDR")
+	serverAddr := fmt.Sprintf("%s:%s", os.Getenv("SERVER_HOST"), os.Getenv("SERVER_PORT"))
 	cacheRDB := newRedisClient(0)
 	counterRDB := newRedisClient(1)
 	db := newGormDB()
