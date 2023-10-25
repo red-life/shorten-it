@@ -16,19 +16,17 @@ import (
 	"os"
 )
 
-func newRedisClient(host, port, pass string) *redis.Client {
+func newRedisClient(host, pass string) *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", host, port),
+		Addr:     fmt.Sprintf("%s:6379", host),
 		Password: pass,
 		DB:       0,
 	})
 }
 
 func newGormDB() *gorm.DB {
-	host, port, user, pass, dbName := os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_PORT"),
-		os.Getenv("POSTGRES_USERNAME"), os.Getenv("POSTGRES_PASSWORD"),
-		os.Getenv("POSTGRES_DB")
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", host, user, pass, dbName, port)
+	user, pass, dbName := os.Getenv("POSTGRES_USERNAME"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_DB")
+	dsn := fmt.Sprintf("host=postgres user=%s password=%s dbname=%s port=5432 sslmode=disable", user, pass, dbName)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
@@ -41,9 +39,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	serverAddr := fmt.Sprintf("%s:%s", os.Getenv("SERVER_HOST"), os.Getenv("SERVER_PORT"))
-	cacheRDB := newRedisClient(os.Getenv("REDIS_CACHE_HOST"), os.Getenv("REDIS_CACHE_PORT"), os.Getenv("REDIS_CACHE_PASSWORD"))
-	counterRDB := newRedisClient(os.Getenv("REDIS_COUNTER_HOST"), os.Getenv("REDIS_COUNTER_PORT"), os.Getenv("REDIS_COUNTER_PASSWORD"))
+	cacheRDB := newRedisClient("redis_cache", os.Getenv("REDIS_CACHE_PASSWORD"))
+	counterRDB := newRedisClient("redis_counter", os.Getenv("REDIS_COUNTER_PASSWORD"))
 	db := newGormDB()
 	err = db.AutoMigrate(&models.URL{})
 	if err != nil {
@@ -60,7 +57,7 @@ func main() {
 	shortenerHTTP := http.NewShortenerAdapter(shortenerService, validate)
 	engine := gin.Default()
 	http.RegisterShortenerRoutes(shortenerHTTP, engine)
-	err = engine.Run(serverAddr)
+	err = engine.Run(":5000")
 	if err != nil {
 		panic(err)
 	}
