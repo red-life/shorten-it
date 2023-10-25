@@ -2,7 +2,6 @@ version: '3'
 
 services:
   app:
-    container_name: shorten_it
     build: .
     volumes:
       - ".env:/app/.env"
