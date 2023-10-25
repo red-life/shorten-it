@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  app:
+    container_name: shorten_it
+    build: .
+    volumes:
+      - ".env:/app/.env"
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    restart: on-failure
+    depends_on:
+      - postgres
+      - redis_cache
+      - redis_counter
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /data/postgres
+    volumes:
+      - "./data/postgres:/data/postgres"
+    ports:
+      - "${POSTGRES_PORT}:5432"
+
+  redis_cache:
+    image: redis
+    command:
+      - "redis-server"
+      - "--requirepass"
+      - "${REDIS_CACHE_PASSWORD}"
+    ports:
+      - "${REDIS_CACHE_PORT}:6379"
+
+  redis_counter:
+    image: redis
+    command:
+      - "redis-server"
+      - "--requirepass"
+      - "${REDIS_COUNTER_PASSWORD}"
+    ports:
+      - "${REDIS_COUNTER_PORT}:6379"
+    volumes:
+      - "/data/redis_counter:/data"
