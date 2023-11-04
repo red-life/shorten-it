@@ -3,6 +3,7 @@ version: '3'
 services:
   app:
     build: .
+    container_name: shorten_it
     volumes:
       - ".env:/app/.env"
     ports:
@@ -15,6 +16,7 @@ services:
 
   postgres:
     image: postgres
+    container_name: postgres
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USERNAME}"]
       interval: 10s
@@ -31,6 +33,7 @@ services:
 
   redis_cache:
     image: redis
+    container_name: redis_cache
     healthcheck:
       test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
       interval: 10s
@@ -44,6 +47,7 @@ services:
 
   redis_counter:
     image: redis
+    container_name: redis_counter
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping"]
       interval: 10s
