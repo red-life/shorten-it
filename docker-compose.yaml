@@ -15,6 +15,12 @@ services:
 
   postgres:
     image: postgres
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
     environment:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -25,6 +31,12 @@ services:
 
   redis_cache:
     image: redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
     command:
       - "redis-server"
       - "--requirepass"
@@ -34,6 +46,12 @@ services:
 
   redis_counter:
     image: redis
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
     command:
       - "redis-server"
       - "--requirepass"
