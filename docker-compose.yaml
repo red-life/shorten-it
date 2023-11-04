@@ -41,8 +41,6 @@ services:
       - "redis-server"
       - "--requirepass"
       - "${REDIS_CACHE_PASSWORD}"
-      - "--save"
-      - "\"1 1\""
 
   redis_counter:
     image: redis
@@ -56,5 +54,7 @@ services:
       - "redis-server"
       - "--requirepass"
       - "${REDIS_COUNTER_PASSWORD}"
+      - "--save"
+      - "1 1"
     volumes:
-      - "/data/redis_counter:/data"
+      - "./data/redis_counter:/data"
