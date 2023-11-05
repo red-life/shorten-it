@@ -59,5 +59,5 @@ Returns 302 Found with a Location header to the original URL.
 
 
 ## Next Steps
-- Document the API using Swagger
-- Add Logging
+- [ ] Document the API using Swagger
+- [ ] Add Logging
