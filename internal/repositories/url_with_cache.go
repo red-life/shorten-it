@@ -47,10 +47,18 @@ func (U *URLWithCache) GetLongByKey(ctx context.Context, key string) (string, er
 	if err == nil {
 		return long, nil
 	}
-	if errors.Is(err, customerror.ErrNotFound) {
-		return U.urlRepo.GetLongByKey(ctx, key)
+	if !errors.Is(err, customerror.ErrNotFound) {
+		return "", err
 	}
-	return "", err
+	long, err = U.urlRepo.GetLongByKey(ctx, key)
+	if err != nil {
+		return "", err
+	}
+	err = U.cache.Set(ctx, keyKey, long)
+	if err != nil {
+		return "", err
+	}
+	return long, nil
 }
 
 func (U *URLWithCache) GetKeyByLong(ctx context.Context, longURL string) (string, error) {
@@ -59,8 +67,16 @@ func (U *URLWithCache) GetKeyByLong(ctx context.Context, longURL string) (string
 	if err == nil {
 		return key, nil
 	}
-	if errors.Is(err, customerror.ErrNotFound) {
-		return U.urlRepo.GetKeyByLong(ctx, longURL)
+	if !errors.Is(err, customerror.ErrNotFound) {
+		return "", err
 	}
-	return "", err
+	key, err = U.urlRepo.GetKeyByLong(ctx, longURL)
+	if err != nil {
+		return "", err
+	}
+	err = U.cache.Set(ctx, longKey, key)
+	if err != nil {
+		return "", err
+	}
+	return key, nil
 }
