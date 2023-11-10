@@ -3,8 +3,8 @@ This is a REST API for shortening long URLs, written in Go. It features an in-me
 
 ## Features
 - REST API for shortening URLs
-- In-memory cache to avoid hitting datastore frequently
-- Postgres for persistence at datastore layer
+- In-memory cache to avoid hitting the data store frequently
+- Postgres for persistence at the datastore layer
 - Using a key generate service instead of random key generation
 - Proper error handling 
 - Request validating
@@ -30,7 +30,7 @@ curl --header "Content-Type: application/json" \
 {"key": "xyz"}
 ```
 
-### Redirect to original URL
+### Redirect to the original URL
 **Request:**
 ```bash
 curl http://localhost:5000/xyz
@@ -59,5 +59,5 @@ Returns 302 Found with a Location header to the original URL.
 
 
 ## Next Steps
-- Document the API using Swagger
-- Add Logging
+- [ ] Document the API using Swagger
+- [ ] Add Logging
