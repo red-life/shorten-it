@@ -6,18 +6,21 @@ import (
 	"github.com/red-life/shorten-it/internal/models"
 	"github.com/red-life/shorten-it/internal/pkg/customerror"
 	"github.com/red-life/shorten-it/internal/ports"
+	"golang.org/x/sync/singleflight"
 )
 
 func NewShortenerService(urlRepo ports.URLRepository, kgs ports.KeyGenService) ports.ShortenerService {
 	return &Shortener{
 		urlRepo: urlRepo,
 		kgs:     kgs,
+		group:   singleflight.Group{},
 	}
 }
 
 type Shortener struct {
 	urlRepo ports.URLRepository
 	kgs     ports.KeyGenService
+	group   singleflight.Group
 }
 
 func (s *Shortener) Shorten(ctx context.Context, url string) (string, error) {
@@ -32,7 +35,10 @@ func (s *Shortener) Shorten(ctx context.Context, url string) (string, error) {
 }
 
 func (s *Shortener) GetLongURL(ctx context.Context, key string) (string, error) {
-	return s.urlRepo.GetLongByKey(ctx, key)
+	v, err, _ := s.group.Do(key, func() (interface{}, error) {
+		return s.urlRepo.GetLongByKey(ctx, key)
+	})
+	return v.(string), err
 }
 
 func (s *Shortener) generateAndSave(ctx context.Context, url string) (string, error) {
