@@ -1,4 +1,4 @@
-package base62
+package ports
 
 type Converter interface {
 	Encode(n int64) string

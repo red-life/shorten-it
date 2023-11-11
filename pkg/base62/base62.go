@@ -1,6 +1,7 @@
 package base62
 
 import (
+	"github.com/red-life/shorten-it/internal/ports"
 	"math"
 	"strings"
 )
@@ -11,7 +12,7 @@ var Seed = [62]byte{
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 }
 
-func NewConverter() Converter {
+func NewConverter() ports.Converter {
 	return &Base62{
 		seed: Seed,
 	}

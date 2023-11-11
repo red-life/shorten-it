@@ -3,11 +3,10 @@ package services
 import (
 	"context"
 	"github.com/red-life/shorten-it/internal/ports"
-	"github.com/red-life/shorten-it/pkg/base62"
 	"sync"
 )
 
-func NewKeyGenService(counter ports.CounterRepository, converter base62.Converter) ports.KeyGenService {
+func NewKeyGenService(counter ports.CounterRepository, converter ports.Converter) ports.KeyGenService {
 	return &KeyGen{
 		counter:   counter,
 		converter: converter,
@@ -17,7 +16,7 @@ func NewKeyGenService(counter ports.CounterRepository, converter base62.Converte
 
 type KeyGen struct {
 	counter   ports.CounterRepository
-	converter base62.Converter
+	converter ports.Converter
 	mutex     sync.Mutex
 }
 
